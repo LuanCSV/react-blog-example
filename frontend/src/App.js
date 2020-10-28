@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Routes from './routes';
 import Header from './components/Header';
-import Main from './components/Main';
-import Banner from './components/Banner'
-import Posts from './components/Posts'
-import Footer from './components/Footer'
+import Footer from './components/Footer';
+import { detectDevice } from './Helpers'
 import './App.css';
 
-function App() {
+const App = () => {
+    const [currentDevice, setCurrentDevice] = useState(detectDevice())
+
+  useEffect(() => {
+    const updateDeviceDimensions = () => {
+      setCurrentDevice(detectDevice())
+    }
+    window.addEventListener('resize', updateDeviceDimensions)
+    updateDeviceDimensions()
+    return () => {
+      window.removeEventListener('resize', updateDeviceDimensions)
+    }
+  }, [currentDevice])
+
   return (
     <div className="App">
-      <Header />
-      <Main>
-        <Banner/>
-        <Posts/>
-      </Main>
+      <Header currentDevice={currentDevice} />
+      <Routes />
       <Footer />
     </div>
   );
